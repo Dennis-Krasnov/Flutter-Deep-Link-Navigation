@@ -3,7 +3,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
     path: ../../
 
   provider: ^3.0.0
+  after_layout: ^1.0.7+2 # FIXME: why did adding this help?
 
 
 dev_dependencies:

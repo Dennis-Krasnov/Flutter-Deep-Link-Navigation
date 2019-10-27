@@ -1,6 +1,7 @@
+# TODO: rename to flutter_deep_link_navigation for SEO (find all instances)
 name: deep_link_navigation
 description: ...
-version: 0.1.0
+version: 0.1.1
 author: Dennis Krasnov <dennis@krasnov.dev>
 homepage: ...
 #repository: https://github.com/felangel/bloc
@@ -15,6 +16,7 @@ dependencies:
     sdk: flutter
 
   provider: ^3.0.0
+  after_layout: ^1.0.7+2
 
 dev_dependencies:
   flutter_test:

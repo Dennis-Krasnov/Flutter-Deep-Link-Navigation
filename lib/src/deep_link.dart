@@ -14,6 +14,7 @@ abstract class DeepLink {
   DeepLink(this.path);
 
   /// for custom behaviour/mixins ... throw stuff
+  /// Does nothing by default...
   @mustCallSuper
   void onDispatch(BuildContext context) {}
 
@@ -27,12 +28,12 @@ abstract class ValueDeepLink<T> extends DeepLink {
   /// ...
   final T data;
 
-  ValueDeepLink(String path, this.data) : super("$path/$data");
+  ValueDeepLink(String path, this.data, {String Function(T) toString})
+    : super("$path/${toString != null ? toString(data) : data}");
 }
 
-/// ...
-/// eg. final deepLink = XYZBase64DeepLink(serialize(data));
-/// eg. final deserialized = deserialize(deepLink.decode());
+/// ... ONLY MAKES THE toString prettier!!!! (no long json)
+/// eg. final deepLink = XYZBase64DeepLink(data);
 abstract class Base64DeepLink extends ValueDeepLink<String> {
   /// ...
   static String _base64Encoded(String original) {
@@ -40,12 +41,7 @@ abstract class Base64DeepLink extends ValueDeepLink<String> {
     return base64.encode(bytes);
   }
 
-  String decode() {
-    final bytes = base64.decode(data);
-    return String.fromCharCodes(bytes);
-  }
-
-  Base64DeepLink(String path, String data) : super("$path/${_base64Encoded(data)}", _base64Encoded(data));
+  Base64DeepLink(String path, String data) : super(path, data, toString: (data) => _base64Encoded(data));
 }
 
 // FIXME: how does one serialize a function - just use base64, manually deserialize!!

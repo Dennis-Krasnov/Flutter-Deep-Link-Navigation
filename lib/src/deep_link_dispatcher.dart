@@ -23,6 +23,5 @@ class DeepLinkDispatcher<T> {
 
   /// ...
   /// eg. XYZDeepLink: DeepLinkDispatcher<Data>.value((path, value, push) => null;
-  DeepLinkDispatcher.value(RecursiveDeepLinkDispatcher<T> dispatchers)
-    : dispatchers = ((String path, T value, void Function(Widget) push) => dispatchers(path, value, push));
+  DeepLinkDispatcher.value(this.dispatchers);
 }
