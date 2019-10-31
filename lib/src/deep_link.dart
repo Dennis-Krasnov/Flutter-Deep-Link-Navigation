@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
@@ -43,21 +42,3 @@ abstract class Base64DeepLink extends ValueDeepLink<String> {
 
   Base64DeepLink(String path, String data) : super(path, data, toString: (data) => _base64Encoded(data));
 }
-
-// FIXME: how does one serialize a function - just use base64, manually deserialize!!
-
-
-// TODO: ValueDeepLink2<T1, T2> extends DeepLink ... (upto 5?)
-// https://github.com/dart-lang/sdk/issues/16253 (can easily do: List<dynamic> arguments ... "${arguments.join("/")}")
-
-/// ...
-// TODO: question: how do I make this full screen if it's a custom parameter...?
-// TODO: must specify exception handlers instead!
-//class RouteNotFoundDL extends ValueDeepLink<String> {
-//  RouteNotFoundDL(String routePath) : super("route-not-found", routePath);
-//}
-//
-///// ...
-//class RouteExceptionDL extends ValueDeepLink<Object> {
-//  RouteExceptionDL(Object error) : super("route-exception", error);
-//}

@@ -1,9 +1,8 @@
 import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:single_base_route/data.dart';
+import 'package:single_base_route/deep_links.dart';
 import 'package:single_base_route/widgets/artist_page.dart';
-import 'package:single_base_route/widgets/favorites_page.dart';
 
 class LibraryPage extends StatelessWidget {
   @override
@@ -14,10 +13,8 @@ class LibraryPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.favorite),
-//            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => FavoritesPage()))
             onPressed: () {
-              final nav = Provider.of<DeepLinkNavigator>(context);
-              print("NAV IS $nav");
+              DeepLinkNavigator.of(context).push(FavoritesDL());
             },
           )
         ],
