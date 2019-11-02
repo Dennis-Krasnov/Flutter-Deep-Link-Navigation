@@ -1,4 +1,7 @@
+import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:single_base_route/data.dart';
+import 'package:single_base_route/deep_links.dart';
 import 'package:single_base_route/model.dart';
 
 class SongPage extends StatelessWidget {
@@ -22,7 +25,7 @@ class SongPage extends StatelessWidget {
             ),
             RaisedButton(
               child: Text("Go to artist"),
-              onPressed: () => null,
+              onPressed: () => DeepLinkNavigator.of(context).navigateTo([LibraryDL(), ArtistDL(Data.artists[song.artistId])]),
             ),
           ],
         ),

@@ -1,5 +1,5 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:deep_link_navigation/src/deep_link_navigator.dart';
+import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/widgets.dart';
 
 class DefaultPageLoader extends StatefulWidget {

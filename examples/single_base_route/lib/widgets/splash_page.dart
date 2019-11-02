@@ -8,7 +8,7 @@ class SplashPage extends StatelessWidget {
           title: Text("splash")
       ),
       body: IconButton(
-        icon: Icon(Icons.favorite),
+        icon: Icon(Icons.autorenew),
       ),
     );
   }
