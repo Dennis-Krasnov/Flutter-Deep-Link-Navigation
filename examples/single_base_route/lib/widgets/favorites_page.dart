@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:single_base_route/data.dart';
 import 'package:single_base_route/widgets/song_list_tile.dart';
 
@@ -7,7 +8,10 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My favorites (${Data.favoriteSongs.length})"),
+        title: Text(
+          "My favorites (${Data.favoriteSongs.length})",
+          key: Key("title"),
+        ),
       ),
       body: ListView(
         children: <Widget>[

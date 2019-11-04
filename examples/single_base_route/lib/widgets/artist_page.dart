@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:single_base_route/model.dart';
 import 'package:single_base_route/widgets/song_list_tile.dart';
 
@@ -11,7 +12,10 @@ class ArtistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(artist.name),
+        title: Text(
+          artist.name,
+          key: Key("title"),
+        ),
       ),
       body: ListView(
         children: <Widget>[

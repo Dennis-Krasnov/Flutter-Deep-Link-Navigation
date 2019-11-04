@@ -1,11 +1,12 @@
-import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/material.dart';
 
-/// Syncs flutter's native navigator pop events with [navigationBloc].
-/// Only relays pop event when a real pop event occurs (not part of deep linking).
-/// eg. Navigator(observers: [NavigationPopObserver(BlocProvider.of<NavigationBloc>(context))])
+import 'package:deep_link_navigation/deep_link_navigation.dart';
+
+/// Notifies [DeepLinkNavigator] of a pop that occurred from the native flutter navigator.
+/// Handles android back button, back arrow, and [DeepLinkNavigator.pop()] calls native pop.
+///
+/// eg. Navigator(observers: [PopObserver()])
 class PopObserver extends NavigatorObserver {
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) =>
-    DeepLinkNavigator.of(route.navigator.context).notifyPopped();
+  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) => DeepLinkNavigator.of(route.navigator.context).notifyPopped();
 }

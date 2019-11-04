@@ -1,22 +1,24 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/widgets.dart';
 
-class DefaultPageLoader extends StatefulWidget {
+import 'package:deep_link_navigation/deep_link_navigation.dart';
+
+/// Navigates to default route after first build.
+class DefaultRouteLoader extends StatefulWidget {
+  /// The widget that is below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.child}
   final Widget child;
 
-  const DefaultPageLoader({Key key, this.child}) : super(key: key);
+  const DefaultRouteLoader({Key key, this.child}) : super(key: key);
 
   @override
-  _DefaultPageLoaderState createState() => _DefaultPageLoaderState();
+  _DefaultRouteLoaderState createState() => _DefaultRouteLoaderState();
 }
 
-class _DefaultPageLoaderState extends State<DefaultPageLoader> with AfterLayoutMixin<DefaultPageLoader> {
+class _DefaultRouteLoaderState extends State<DefaultRouteLoader> with AfterLayoutMixin<DefaultRouteLoader> {
   @override
-  void afterFirstLayout(BuildContext context) {
-    print("After first layout :3");
-    DeepLinkNavigator.of(context).replaceWithDefault();
-  }
+  void afterFirstLayout(BuildContext context) => DeepLinkNavigator.of(context).replaceWithDefault();
 
   @override
   Widget build(BuildContext context) => widget.child;

@@ -1,14 +1,34 @@
-# deep_link_navigation
+# Flutter Deep Link Navigation
 
-A new Flutter package.
+Provides an elegant abstraction for complete deep linking navigation in flutter.
+
+Orchestrates a native flutter navigator in the background.
 
 ## Getting Started
+Please refer to the examples folder.
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Features
+* `DeepLinkNavigator` mirrors native `Navigator` interface, also accessible through context
+* `DeepLinkNavigator.navigateTo` navigates to *ANY* route in the hierarchy
+* Doesn't interfere with native dialogs, selects, and popups
+* Custom mixins add provide custom logic on a deep link basis (see multiple_base_routes example)
+* Animates transitions between routes as if navigation was done natively
+*
+* TODO: enumarate others
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Limitations
+* Can't currently define arbitrarily deep navigation hierarchies (think Spotify)
+* Can't store separate persisted navigation states for a multi-base route application (think Instagram)
+
+## What's left to do
+[x] Finish UI testing single base example
+[x] Animated transition for pushes
+[x] Custom mixins
+[x] Exception handling routes
+[] Push with completer
+[x] Advanced example with multiple base routes and custom mixins
+[] Navigation diagrams
+[] Finish UI testing multi base example
+[] Fully clean up code, tests, and documentation
+[] Publish dart package
+[] Unit test deep link navigator logic

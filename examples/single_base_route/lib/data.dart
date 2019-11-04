@@ -1,5 +1,6 @@
 import 'package:single_base_route/model.dart';
 
+/// Random placeholder data meant to be replaced with a database.
 class Data {
   static final artists = <String, Artist>{
     "1234": Artist(

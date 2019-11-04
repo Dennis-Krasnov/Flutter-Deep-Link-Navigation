@@ -1,12 +1,10 @@
-# TODO: rename to flutter_deep_link_navigation for SEO (find all instances)
 name: deep_link_navigation
-description: ...
+description: Deep link navigation for Flutter apps with elegant configuation orchestrating a native flutter navigator.
 version: 0.1.1
 author: Dennis Krasnov <dennis@krasnov.dev>
-homepage: ...
-#repository: https://github.com/felangel/bloc
-#issue_tracker: https://github.com/felangel/bloc/issues
-#homepage: https://bloclibrary.dev
+#homepage: https://github.com/Dennis-Krasnov
+repository: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation
+issue_tracker: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/issues
 
 environment:
   sdk: ">=2.2.2 <3.0.0"

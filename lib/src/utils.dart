@@ -2,19 +2,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// ...
+/// Used to compare how many deep links in a route match another route.
 int indexOfLastCommonElement(Iterable a, Iterable b) {
   int smallerLength = math.min(a.length, b.length);
   for (int i = 0; i < smallerLength; i++) {
     if (a.elementAt(i) != b.elementAt(i)) {
-      // inclusive
-      return i + 1;
+      return i;
     }
   }
   return smallerLength;
 }
-
-// TODO: on pop scope only needed for nested ...
 
 /// Page route without animations.
 class NoAnimationPageRoute<T> extends MaterialPageRoute<T> {
@@ -22,12 +19,12 @@ class NoAnimationPageRoute<T> extends MaterialPageRoute<T> {
     @required WidgetBuilder builder,
     RouteSettings settings,
     bool maintainState = true,
-    bool fullscreenDialog = false, // TODO
+    bool fullscreenDialog = false, // TODO makes 'x' icon instead of '<-'
   }) : super(
-      builder: builder,
-      maintainState: maintainState,
-      settings: settings,
-      fullscreenDialog: fullscreenDialog
+    builder: builder,
+    maintainState: maintainState,
+    settings: settings,
+    fullscreenDialog: fullscreenDialog
   );
 
   @override

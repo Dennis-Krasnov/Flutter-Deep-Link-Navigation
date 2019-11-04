@@ -12,13 +12,15 @@ dependencies:
   deep_link_navigation:
     path: ../../
 
-  provider: ^3.0.0
-  after_layout: ^1.0.7+2 # FIXME: why did adding this help?
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_driver:
+    sdk: flutter
+
+  test: any
+  flutter_gherkin: ^1.1.4
 
 flutter:
   uses-material-design: true

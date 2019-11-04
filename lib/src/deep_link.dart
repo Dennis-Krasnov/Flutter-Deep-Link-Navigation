@@ -4,37 +4,41 @@ import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 /// Base class for all deep links.
+///
 /// eg. final deepLink = XYZDeepLink();
 @immutable
 abstract class DeepLink {
-  /// ...
+  /// Human-readable representation of deep link.
   final String path;
 
   DeepLink(this.path);
 
-  /// for custom behaviour/mixins ... throw stuff
-  /// Does nothing by default...
-  @mustCallSuper
+  /// Mixins on [DeepLink] may override [onDispatch] to perform validation that throws custom errors.
+  /// May validate against state accessed through context, or defined as a global/static variable.
+  /// Does nothing by default.
   void onDispatch(BuildContext context) {}
 
   @override
   String toString() => path;
 }
 
-/// ...
+/// Deep link that also stores typed data.
+/// May override [toString()] to provide human-readable data representation.
+///
 /// eg. final deepLink = XYZValueDeepLink<int>(42);
 abstract class ValueDeepLink<T> extends DeepLink {
-  /// ...
   final T data;
 
   ValueDeepLink(String path, this.data, {String Function(T) toString})
     : super("$path/${toString != null ? toString(data) : data}");
 }
 
-/// ... ONLY MAKES THE toString prettier!!!! (no long json)
+/// Value deep link that base64 encodes its [toString] representation.
+/// Shouldn't manually override toString().
+///
 /// eg. final deepLink = XYZBase64DeepLink(data);
 abstract class Base64DeepLink extends ValueDeepLink<String> {
-  /// ...
+  /// Converts [original] to base64 representation.
   static String _base64Encoded(String original) {
     final bytes = utf8.encode(original);
     return base64.encode(bytes);
