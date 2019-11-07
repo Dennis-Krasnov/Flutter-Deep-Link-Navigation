@@ -12,7 +12,7 @@ mixin FullScreen on DeepLink {}
 
 mixin Authenticated on DeepLink {
   @override
-  onDispatch(BuildContext context) {
+  void onDispatch(BuildContext context) {
     // Get state from context or global/static variable
     final isAuthenticated = Provider.of<AuthenticationService>(context, listen: false).authenticated;
 

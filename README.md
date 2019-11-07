@@ -19,6 +19,7 @@ Please refer to the examples folder.
 ## Limitations
 * Can't currently define arbitrarily deep navigation hierarchies (think Spotify)
 * Can't store separate persisted navigation states for a multi-base route application (think Instagram)
+* Can't type `DeepLinkDispatcher.value(_, value, __)` due to recursive nature of navigation hierarchy definition
 
 ## What's left to do
 [x] Finish UI testing single base example

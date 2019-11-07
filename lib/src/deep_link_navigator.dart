@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -48,12 +47,12 @@ class DeepLinkNavigator with ChangeNotifier {
     @required this.linkDispatchers,
     @required this.routeNotFoundErrorMapping,
     this.customErrorRouteMappings,
-    @required this.defaultRoute
+    this.defaultRoute
   }) :
     assert(linkDispatchers != null),
     assert(routeNotFoundErrorMapping != null, "RouteNotFoundErrorMapping must be defined to a valid route to avoid recursion."),
     assert(customErrorRouteMappings == null || !customErrorRouteMappings.containsKey(RouteNotFound), "Please specify RouteNotFound in routeNotFoundErrorMapping"),
-    assert(defaultRoute != null && defaultRoute.isNotEmpty);
+    assert(defaultRoute == null || defaultRoute.isNotEmpty);
 
   /// Handle a significant change of the current route.
   void handleRouteChanged() {
@@ -163,7 +162,12 @@ class DeepLinkNavigator with ChangeNotifier {
   }
 
   /// Resets navigation to user's default page.
-  void replaceWithDefault() => navigateTo(defaultRoute);
+  /// Does nothing if [defaultRoute] is null.
+  void replaceWithDefault() {
+    if (defaultRoute != null) {
+      navigateTo(defaultRoute);
+    }
+  }
 
   /// Pops the topmost route from the native navigator.
   bool pop<T>(T value) => navigatorKey.currentState.pop(value);

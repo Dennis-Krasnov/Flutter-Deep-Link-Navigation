@@ -78,9 +78,9 @@ class DeepLinkMaterialApp extends MaterialApp {
     this.customErrorRouteMappings,
     this.childBuilder,
     this.splashScreen,
-    @required this.defaultRoute,
+    this.defaultRoute,
   }) :
-  assert(defaultRoute.isNotEmpty),
+  assert(defaultRoute == null || defaultRoute.isNotEmpty),
   super(
     key: key,
     navigatorKey: _navigatorKey,

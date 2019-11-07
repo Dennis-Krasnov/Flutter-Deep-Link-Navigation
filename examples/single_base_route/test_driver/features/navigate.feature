@@ -28,5 +28,3 @@ Feature: Deep link navigator direct navigation
     And the text "Route not found: [library, song/6363]" appears
     Then I go back 1 time
     And the title is "Library"
-
-  # TODO: multi_base_route project has 'errors' tests, and 'custom mixins (auth mixin / full page)'

@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
       ),
       body: Center(
         child: RaisedButton(
-          key: Key("login button"),
+          key: Key("login"),
           child: Text("Login"),
           onPressed: () {
             Provider.of<AuthenticationService>(context).login();

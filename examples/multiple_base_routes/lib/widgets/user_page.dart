@@ -1,8 +1,4 @@
-import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:multiple_base_routes/model.dart';
-import 'package:multiple_base_routes/widgets/song_list_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../data.dart';

@@ -13,11 +13,12 @@ Future<void> main() {
       ProgressReporter(),
       TestRunSummaryReporter(),
     ]
-    ..stepDefinitions = [GoBack(), NavigateToArtist(), OpenArtist(), OpenFavorites(), OpenSong(), TextAppears(), TitleIs()]
+    ..stepDefinitions = [TextDisappears(), TitleIs()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     ..exitAfterTestRun = true;
   return GherkinRunner().execute(config);
 }
 
+// cd examples/multiple_base_routes
 // ~/Dev/flutter/bin/cache/dart-sdk/bin/dart test_driver/app_test.dart

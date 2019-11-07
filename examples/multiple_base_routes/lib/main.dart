@@ -46,9 +46,9 @@ class MusicApp extends StatelessWidget {
         currentIndex: currentIndex(deepLinkNavigator.currentRoute),
         onTap: (int index) => deepLinkNavigator.navigateTo([bottomNavigationDeepLinks[index]]),
         items: [
-          BottomNavigationBarItem(title: Text("Library"), icon: Icon(Icons.queue_music)),
-          BottomNavigationBarItem(title: Text("Favorites"), icon: Icon(Icons.favorite)),
-          BottomNavigationBarItem(title: Text("User"), icon: Icon(Icons.person)),
+          BottomNavigationBarItem(title: Text("Library"), icon: Icon(Icons.queue_music, key: Key("library"))),
+          BottomNavigationBarItem(title: Text("Favorites"), icon: Icon(Icons.favorite, key: Key("favorites"))),
+          BottomNavigationBarItem(title: Text("User"), icon: Icon(Icons.person, key: Key("user"))),
         ],
       ),
     ),

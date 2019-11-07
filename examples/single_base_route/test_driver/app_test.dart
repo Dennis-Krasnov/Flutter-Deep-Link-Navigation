@@ -20,4 +20,5 @@ Future<void> main() {
   return GherkinRunner().execute(config);
 }
 
+// cd examples/single_base_route
 // ~/Dev/flutter/bin/cache/dart-sdk/bin/dart test_driver/app_test.dart
