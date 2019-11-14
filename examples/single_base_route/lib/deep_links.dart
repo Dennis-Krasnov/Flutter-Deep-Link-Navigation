@@ -10,14 +10,14 @@ class FavoritesDL extends DeepLink {
   FavoritesDL() : super("favorites");
 }
 
-class ArtistDL extends ValueDeepLink {
+class ArtistDL extends ValueDeepLink<Artist> {
   ArtistDL(Artist artist) : super("artist", artist, toString: (artist) => artist.id);
 }
 
-class SongDL extends ValueDeepLink {
+class SongDL extends ValueDeepLink<Song> {
   SongDL(Song song) : super("song", song, toString: (song) => song.id);
 }
 
-class ErrorDL extends ValueDeepLink {
-  ErrorDL(Exception e) : super("error", e);
+class ErrorDL<E extends Exception> extends ValueDeepLink<E> {
+  ErrorDL(E e) : super("error", e);
 }

@@ -7,6 +7,9 @@ Orchestrates a native flutter navigator in the background.
 ## Getting Started
 Please refer to the examples folder.
 
+## Configuration ...
+Inspired by Continuation passing style https://en.wikipedia.org/wiki/Continuation-passing_style
+
 ## Features
 * `DeepLinkNavigator` mirrors native `Navigator` interface, also accessible through context
 * `DeepLinkNavigator.navigateTo` navigates to *ANY* route in the hierarchy
