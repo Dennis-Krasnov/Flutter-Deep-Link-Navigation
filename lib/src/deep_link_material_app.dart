@@ -13,14 +13,8 @@ class DeepLinkMaterialApp extends MaterialApp {
   /// Internal instance of a native flutter Navigator.
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
-  /// Representation of deep link navigation hierarchy.
-  final Map<Type, DeepLinkDispatcher> linkDispatchers;
-
-  /// Route mapping for route not found exception.
-  final ErrorMapping<RouteNotFound> routeNotFoundErrorMapping;
-
-  /// Route mappings for custom exception handling.
-  final Map<Type, ErrorMapping> customErrorRouteMappings;
+  /// Recursive data structure to represent deep link navigation hierarchy.
+  final NavigationBuilder navigationBuilder;
 
   /// {@macro flutter.widgets.widgetsApp.builder}
   ///
@@ -73,9 +67,7 @@ class DeepLinkMaterialApp extends MaterialApp {
     bool showSemanticsDebugger = false,
     bool debugShowCheckedModeBanner = true,
     // Custom fields
-    @required this.linkDispatchers,
-    @required this.routeNotFoundErrorMapping,
-    this.customErrorRouteMappings,
+    @required this.navigationBuilder,
     this.childBuilder,
     this.splashScreen,
     this.defaultRoute,
@@ -93,9 +85,7 @@ class DeepLinkMaterialApp extends MaterialApp {
     builder: (BuildContext context, Widget child) => ListenableProvider<DeepLinkNavigator>(
       builder: (BuildContext context) => DeepLinkNavigator(
         navigatorKey: _navigatorKey,
-        linkDispatchers: linkDispatchers,
-        routeNotFoundErrorMapping: routeNotFoundErrorMapping,
-        customErrorRouteMappings: customErrorRouteMappings,
+        navigationBuilder: navigationBuilder,
         defaultRoute: defaultRoute,
       ),
       dispose: (BuildContext context, DeepLinkNavigator value) => null,
