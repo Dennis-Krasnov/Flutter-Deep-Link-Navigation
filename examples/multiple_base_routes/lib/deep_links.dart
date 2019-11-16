@@ -48,6 +48,10 @@ class UserDL extends DeepLink with Authenticated {
   UserDL() : super("user");
 }
 
+class AuthenticationDL extends DeepLink {
+  AuthenticationDL() : super("authentication");
+}
+
 class ArtistDL extends ValueDeepLink<Artist> {
   ArtistDL(Artist artist) : super("artist", artist, toString: (artist) => artist.id);
 }

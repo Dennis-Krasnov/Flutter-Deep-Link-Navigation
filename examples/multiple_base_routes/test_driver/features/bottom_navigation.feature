@@ -16,13 +16,6 @@ Feature: Deep link navigator bottom navigation
     When I tap the "library" button
     Then the title is "Library"
 
-  Scenario: Redirects to login screen on unauthenticated navigation attempt
-    Given I tap the "login" button
-    And I tap the "user" button
-    When I tap the "unauthenticated" button
-    And I tap the "favorites" button
-    Then the title is "Login"
-
   Scenario: Error screen goes full screen
     Given I tap the "login" button
     When I tap the "Non-existant push" button

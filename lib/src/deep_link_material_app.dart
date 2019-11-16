@@ -13,8 +13,8 @@ class DeepLinkMaterialApp extends MaterialApp {
   /// Internal instance of a native flutter Navigator.
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
-  /// Recursive data structure to represent deep link navigation hierarchy.
-  final NavigationBuilder navigationBuilder;
+  /// Top-level dispatcher to represent deep link navigation hierarchy.
+  final NavigationBuilder navigation;
 
   /// {@macro flutter.widgets.widgetsApp.builder}
   ///
@@ -31,7 +31,8 @@ class DeepLinkMaterialApp extends MaterialApp {
 
   /// Initial route of application.
   /// [RouteNotFound] exception defaults back to this route.
-  /// Must contain at least one deep link.
+  /// If null, must manually navigate from the splash screen.
+  /// If specified, must contain at least one deep link.
   final List<DeepLink> defaultRoute;
 
   /// Creates a MaterialApp.
@@ -67,13 +68,11 @@ class DeepLinkMaterialApp extends MaterialApp {
     bool showSemanticsDebugger = false,
     bool debugShowCheckedModeBanner = true,
     // Custom fields
-    @required this.navigationBuilder,
+    @required this.navigation,
     this.childBuilder,
     this.splashScreen,
     this.defaultRoute,
-  }) :
-  assert(defaultRoute == null || defaultRoute.isNotEmpty),
-  super(
+  }) : super(
     key: key,
     navigatorKey: _navigatorKey,
     home: splashScreen ?? Container(),
@@ -85,7 +84,7 @@ class DeepLinkMaterialApp extends MaterialApp {
     builder: (BuildContext context, Widget child) => ListenableProvider<DeepLinkNavigator>(
       builder: (BuildContext context) => DeepLinkNavigator(
         navigatorKey: _navigatorKey,
-        navigationBuilder: navigationBuilder,
+        navigation: navigation,
         defaultRoute: defaultRoute,
       ),
       dispose: (BuildContext context, DeepLinkNavigator value) => null,

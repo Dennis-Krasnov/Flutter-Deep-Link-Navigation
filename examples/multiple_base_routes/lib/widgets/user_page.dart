@@ -1,13 +1,13 @@
+import 'package:deep_link_navigation/deep_link_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data.dart';
+import 'package:multiple_base_routes/data.dart';
+import 'package:multiple_base_routes/deep_links.dart';
 
 class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isAuthenticated = Provider.of<AuthenticationService>(context).authenticated;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -15,28 +15,29 @@ class UserPage extends StatelessWidget {
           key: Key("title"),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          RadioListTile(
-            key: Key("authenticated"),
-            title: Text("Authenticated"),
-            groupValue: isAuthenticated,
-            value: true,
-            onChanged: (bool value) => Provider.of<AuthenticationService>(context).login(),
-          ),
-          RadioListTile(
-            key: Key("unauthenticated"),
-            title: Text("Unuthenticated"),
-            groupValue: isAuthenticated,
-            value: false,
-            onChanged: (bool value) {
-              Provider.of<AuthenticationService>(context).logout();
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Try navigating to a page that requires authentication")
-              ));
-            },
-          ),
-        ],
+      body: Center(
+        child: RaisedButton(
+          key: Key("authentication chooser"),
+          child: Text("Choose authentication status"),
+          onPressed: () async {
+            final isNowAuthenticated = await DeepLinkNavigator.of(context).push<bool>(AuthenticationDL());
+
+            if (isNowAuthenticated != null) {
+              if (isNowAuthenticated) {
+                Provider.of<AuthenticationService>(context).login();
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("You're already authenticated, nothing should change")
+                ));
+              }
+              else {
+                Provider.of<AuthenticationService>(context).logout();
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("Try navigating to a page that requires authentication")
+                ));
+              }
+            }
+          },
+        ),
       ),
     );
   }

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
 /// Base class for all deep links.
 ///
@@ -26,6 +23,9 @@ abstract class DeepLink {
 /// May override [toString()] to provide human-readable data representation.
 ///
 /// eg. final deepLink = XYZValueDeepLink<int>(42);
+/// eg. class SongDL extends ValueDeepLink<Song> {
+///         SongDL(Song song) : super("song", song, toString: (song) => song.id);
+///     }
 abstract class ValueDeepLink<T> extends DeepLink {
   final T data;
 
@@ -37,12 +37,14 @@ abstract class ValueDeepLink<T> extends DeepLink {
 /// Shouldn't manually override toString().
 ///
 /// eg. final deepLink = XYZBase64DeepLink(data);
-abstract class Base64DeepLink extends ValueDeepLink<String> {
-  /// Converts [original] to base64 representation.
-  static String _base64Encoded(String original) {
-    final bytes = utf8.encode(original);
-    return base64.encode(bytes);
-  }
-
-  Base64DeepLink(String path, String data) : super(path, data, toString: (data) => _base64Encoded(data));
-}
+/// TODO: test this deep link
+//import 'dart:convert';
+//abstract class Base64DeepLink extends ValueDeepLink<String> {
+//  /// Converts [original] to base64 representation.
+//  static String _base64Encoded(String original) {
+//    final bytes = utf8.encode(original);
+//    return base64.encode(bytes);
+//  }
+//
+//  Base64DeepLink(String path, String data) : super(path, data, toString: (data) => _base64Encoded(data));
+//}

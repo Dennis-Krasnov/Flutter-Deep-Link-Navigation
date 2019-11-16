@@ -1,3 +1,11 @@
+## [1.1.1] - 2019/11/15
+
+* Updated configuration syntax to allow passing value deeper in hierarchy
+* Added a future<T> return for DeepLinkNavigator.push<T>
+* Added promise route for multi_base_routes example, added to UI test
+* Refactored and documented project
+* Added readme documentation with diagrams and examples
+
 ## [1.0.1] - 2019/11/14
 
 * Completely overhauled configuration syntax

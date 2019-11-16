@@ -2,96 +2,77 @@ import 'package:flutter/widgets.dart';
 
 import 'package:deep_link_navigation/src/deep_link.dart';
 
-/// Dispatcher for single route.
-typedef PathBuilder = Widget Function(BuildContext context, String path);
+/// Widget for route.
+typedef PathBuilder = Widget Function(String path);
 
-/// Dispatcher for single route with [value].
-typedef ValueBuilder<T> = Widget Function(BuildContext context, T value, String path);
+/// Widget for route with [value].
+typedef ValueBuilder<T> = Widget Function(T value, String path);
 
-///
+/// Route mapping for [exception].
 typedef ErrorMapping = List<DeepLink> Function(BuildContext context, Exception exception, String path);
 
-/// Mutate [dispatcher] to build next level of navigation.
-typedef NavigationBuilder = Dispatcher Function(Dispatcher dispatcher);
+/// Dispatcher for this level of navigation.
+typedef NavigationBuilder = Dispatcher Function(BuildContext context);
+
+/// Dispatcher for this level of navigation with [value].
+typedef NavigationValueBuilder<T> = Dispatcher Function(BuildContext context, T value);
 
 /// A non-leaf node in the navigation hierarchy tree.
 class Dispatcher {
-  /// Internal representation of route dispatchers.
+  /// Internal representation of widget builders.
+  /// Values must be dynamic since function parameter types don't upcast.
+  /// Ideally, the value type would be `ValueBuilder<dynamic>`.
   Map<Type, dynamic> _routeBuilders = {};
   Map<Type, dynamic> get routeBuilders => _routeBuilders;
 
-  /// Internal representation of error dispatchers.
+  /// Internal representation of error mappings.
   Map<Type, ErrorMapping> _errorMappers = {};
   Map<Type, ErrorMapping> get errorMappers => _errorMappers;
 
   /// Internal representation of deep link navigation hierarchy.
-  Map<Type, NavigationBuilder> _subNavigationBuilders = {};
-  Map<Type, NavigationBuilder> get subNavigationBuilders => _subNavigationBuilders;
+  /// Ideally the value type would be `NavigationValueBuilder<dynamic>`.
+  Map<Type, dynamic> _subNavigations = {};
+  Map<Type, dynamic> get subNavigations => _subNavigations;
 
-  // TODO: merge ^^ into most recent dispatcher of errors
-
-  /// Add a path route dispatcher to this level of hierarchy.
+  /// Add a path widget builder to this level of hierarchy.
   void path<DL extends DeepLink>(
     PathBuilder builder,
-    {NavigationBuilder subNavigationBuilder}
+    {NavigationBuilder subNavigation}
   ) {
     assert(DL != dynamic, "A deep link type must be specified.");
-    assert(!routeBuilders.containsKey(DL), "A dispatcher for ${DL.runtimeType} has already beed defined.");
-    assert(builder != null); // TODO: later check that resulting widget isn't null
-//    assert(subNavigation == null || subNavigation) // TODO: later check that resulting subNavigation isn't null
+    assert(!routeBuilders.containsKey(DL), "A widget builder for ${DL.runtimeType} has already beed defined.");
+    assert(builder != null);
 
-    _routeBuilders[DL] = (context, _, path) => builder(context, path);// as dynamic;
-//    _routeBuilders.putIfAbsent(DL, (context, _, path) => builder(context, path));
+    _routeBuilders[DL] = (_, path) => builder(path);
 
-    if (subNavigationBuilder != null) {
-      _subNavigationBuilders[DL] = subNavigationBuilder;
+    if (subNavigation != null) {
+      _subNavigations[DL] = (context, _) => subNavigation(context);
     }
   }
 
-  /// Add a value route dispatcher to this level of hierarchy.
+  /// Add a value widget builder to this level of hierarchy.
   void value<T, DL extends ValueDeepLink<T>>(
-    Widget Function(BuildContext context, T value, String path) builder,
-    {NavigationBuilder subNavigationBuilder}
+    Widget Function(T value, String path) builder,
+    {NavigationValueBuilder<T> subNavigation}
   ) {
     assert(T != dynamic, "Data type must be specified.");
     assert(DL != dynamic, "A deep link type must be specified.");
-    assert(!routeBuilders.containsKey(DL), "A dispatcher for ${DL.runtimeType} has already beed defined.");
-    assert(builder != null); // TODO: later check that resulting widget isn't null
-//    assert(subNavigation == null || subNavigation) // TODO: later check that resulting subNavigation isn't null
+    assert(!routeBuilders.containsKey(DL), "A widget builder for ${DL.runtimeType} has already beed defined.");
+    assert(builder != null);
 
     _routeBuilders[DL] = builder;
-//    _routeBuilders.putIfAbsent(DL, builder as dynamic);
 
-    if (subNavigationBuilder != null) {
-      _subNavigationBuilders[DL] = subNavigationBuilder;
+    if (subNavigation != null) {
+      _subNavigations[DL] = subNavigation;
     }
   }
 
-  // TAKES TOP-MOST (keep updating map though iterations)
+  /// Add a exception mapping to this level of hierarchy.
   void exception<E extends Exception>(ErrorMapping mapper) {
     assert(E != dynamic, "An error type must be specified.");
-    assert(!routeBuilders.containsKey(E), "A dispatcher for ${E.runtimeType} has already beed defined.");
-    assert(mapper != null); // TODO: later check that resulting widget isn't null
+    assert(!routeBuilders.containsKey(E), "An error mapping for ${E.runtimeType} has already beed defined.");
+    assert(mapper != null);
 
     _errorMappers[E] = mapper;
   }
 }
-
-// voided functions solve problem with . vs ..
-//void main() {
-//  App(
-//    // ...
-//    // FIXME: Don't provide context ?! - context would allow BlocProvider.of<Bloc>(context).currentState... !!!
-//    navigation: (baseDispatcher) => baseDispatcher
-//      ..path<TestDL>((context, path) => Container())
-//      ..path<TestDL>(
-//        (context, path) => Container(),
-//        subNavigation: (dispatcher) => dispatcher
-//          ..value<int, VTestDL>((context, value, path) => Container())
-//          ..path<TestDL>((context, path) => Container()),
-//      ),
-//    // ...
-//  );
-//}
-
-// TODO: use extension methods to condense large sub dispatcher builders (bring return close to definition)

@@ -10,29 +10,25 @@ import 'package:single_base_route/widgets/library_page.dart';
 import 'package:single_base_route/widgets/song_page.dart';
 import 'package:single_base_route/widgets/splash_page.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
-
 void main() => runApp(MusicApp());
 
 class MusicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DeepLinkMaterialApp(
     // This is where the magic happens
-    navigationBuilder: (baseDispatcher) => baseDispatcher
+    navigation: (context) => Dispatcher()
       ..path<LibraryDL>(
-        (context, path) => LibraryPage(),
-        subNavigationBuilder: (dispatcher) => dispatcher
+        (path) => LibraryPage(),
+        subNavigation: (context) => Dispatcher()
           ..value<Artist, ArtistDL>(
-            (context, artist, path) => ArtistPage(artist: artist),
-            subNavigationBuilder: (dispatcher) => dispatcher
-              ..value<Song, SongDL>((context, song, path) => SongPage(song: song)) // TODO: static extension method
+            (artist, path) => ArtistPage(artist: artist),
+            subNavigation: (context, artist) => Dispatcher()..value<Song, SongDL>((song, path) => SongPage(song: song)) // TODO: static extension method
           )
           ..path<FavoritesDL>(
-            (context, path) => FavoritesPage(),
-            subNavigationBuilder: (dispatcher) => dispatcher
-              ..value<Song, SongDL>((context, song, path) => SongPage(song: song)) // TODO: static extension method
+            (path) => FavoritesPage(),
+            subNavigation: (context) => Dispatcher()..value<Song, SongDL>((song, path) => SongPage(song: song)) // TODO: static extension method
           )
-          ..value<RouteNotFound, ErrorDL<RouteNotFound>>((context, exception, path) => ErrorPage(exception)),
+          ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, path) => ErrorPage(exception)),
       )
       // Exception handling mappings and route dispatchers are specified independently
       ..exception<RouteNotFound>((context, exception, path) => [LibraryDL(), ErrorDL<RouteNotFound>(exception)]),

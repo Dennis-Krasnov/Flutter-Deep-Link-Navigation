@@ -13,7 +13,7 @@ int indexOfLastCommonElement(Iterable a, Iterable b) {
   return smallerLength;
 }
 
-/// Page route without animations.
+/// Page route transition without an animation.
 class NoAnimationPageRoute<T> extends MaterialPageRoute<T> {
   NoAnimationPageRoute({
     @required WidgetBuilder builder,

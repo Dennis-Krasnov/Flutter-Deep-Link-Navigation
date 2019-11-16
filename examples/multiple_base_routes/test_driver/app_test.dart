@@ -13,7 +13,7 @@ Future<void> main() {
       ProgressReporter(),
       TestRunSummaryReporter(),
     ]
-    ..stepDefinitions = [TextDisappears(), TitleIs()]
+    ..stepDefinitions = [GoBack(), TextDisappears(), TitleIs()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     ..exitAfterTestRun = true;
