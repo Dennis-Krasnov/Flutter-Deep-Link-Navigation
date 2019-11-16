@@ -1,10 +1,14 @@
 # Flutter Deep Link Navigation
 
-[![pub.dev package](https://img.shields.io/badge/pub.dev-1.0.1-red?style=flat)](https://pub.dev/packages/deep_link_navigation)
+[![pub.dev package](https://img.shields.io/badge/pub.dev-1.2.1-red?style=flat)](https://pub.dev/packages/deep_link_navigation)
 [![Github stars](https://img.shields.io/github/stars/Dennis-Krasnov/Flutter-Deep-Link-Navigation?style=flat)](https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation)
 [![Open source license](https://img.shields.io/github/license/Dennis-Krasnov/Flutter-Deep-Link-Navigation.svg?style=flat)](https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/blob/master/LICENSE)
+<!-- [![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat)](https://stackoverflow.com/questions/tagged/flutter?sort=votes) -->
+
 <!-- [![codecov](https://codecov.io/gh/Dennis-Krasnov/Diet-Driven/branch/bloc/graph/badge.svg)](https://codecov.io/gh/Dennis-Krasnov/Diet-Driven) -->
 <!-- [![Codemagic build status](https://api.codemagic.io/apps/5d8d561b6fd630197006310b/5d8d561b6fd630197006310a/status_badge.svg)](https://codemagic.io/apps/5d8d561b6fd630197006310b/5d8d561b6fd630197006310a/latest_build) -->
+
+
 
 Provides an elegant abstraction for complete deep linking navigation in Flutter.
 
@@ -121,7 +125,7 @@ mixin Authenticated on DeepLink {
 
 navigation: (context) => Dispatcher()
     // Unauthenticated login page
-    ..exception<Unauthenticated>((context, exception, path) => [LoginDL()])
+    ..exception<Unauthenticated>((exception, path) => [LoginDL()])
     ..path<LoginDL>((path) => LoginPage()),
 ```
 

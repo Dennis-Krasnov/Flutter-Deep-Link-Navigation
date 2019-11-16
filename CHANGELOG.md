@@ -1,3 +1,7 @@
+## [1.2.1] - 2019/11/16
+
+* Removed context from exception mapping
+
 ## [1.1.1] - 2019/11/15
 
 * Updated configuration syntax to allow passing value deeper in hierarchy

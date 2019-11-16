@@ -38,10 +38,10 @@ class MusicApp extends StatelessWidget {
     // This is where the magic happens
     navigation: (context) => Dispatcher()
       // RouteNotFound error page
-      ..exception<RouteNotFound>((context, exception, path) => [ErrorDL<RouteNotFound>(exception)])
+      ..exception<RouteNotFound>((exception, path) => [ErrorDL<RouteNotFound>(exception)])
       ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, path) => ErrorPage(exception))
       // Unauthenticated login page
-      ..exception<Unauthenticated>((context, exception, path) => [LoginDL()])
+      ..exception<Unauthenticated>((exception, path) => [LoginDL()])
       ..path<LoginDL>((path) => LoginPage())
       // The rest of the app
       ..path<LibraryDL>(

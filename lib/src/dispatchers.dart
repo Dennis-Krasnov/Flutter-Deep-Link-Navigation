@@ -9,7 +9,7 @@ typedef PathBuilder = Widget Function(String path);
 typedef ValueBuilder<T> = Widget Function(T value, String path);
 
 /// Route mapping for [exception].
-typedef ErrorMapping = List<DeepLink> Function(BuildContext context, Exception exception, String path);
+typedef ErrorMapping = List<DeepLink> Function(Exception exception, String path);
 
 /// Dispatcher for this level of navigation.
 typedef NavigationBuilder = Dispatcher Function(BuildContext context);

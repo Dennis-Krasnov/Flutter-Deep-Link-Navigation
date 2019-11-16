@@ -119,14 +119,14 @@ class DeepLinkNavigator with ChangeNotifier {
         _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedPath, accumulatedRoute);
       }
     } on RouteNotFound catch(exception) {
-      final route = errors[exception.runtimeType](context, exception, accumulatedRoute.join("/"));
+      final route = errors[exception.runtimeType](exception, accumulatedRoute.join("/"));
       assert(route != null && route.isNotEmpty);
 
       navigateTo(route);
     } on Exception catch(exception) {
       if (!errors.containsKey(exception.runtimeType)) rethrow;
 
-      final route = errors[exception.runtimeType](context, exception, accumulatedRoute.join("/"));
+      final route = errors[exception.runtimeType](exception, accumulatedRoute.join("/"));
       assert(route != null && route.isNotEmpty);
 
       navigateTo(route);

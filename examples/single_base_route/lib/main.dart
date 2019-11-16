@@ -31,7 +31,7 @@ class MusicApp extends StatelessWidget {
           ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, path) => ErrorPage(exception)),
       )
       // Exception handling mappings and route dispatchers are specified independently
-      ..exception<RouteNotFound>((context, exception, path) => [LibraryDL(), ErrorDL<RouteNotFound>(exception)]),
+      ..exception<RouteNotFound>((exception, path) => [LibraryDL(), ErrorDL<RouteNotFound>(exception)]),
     defaultRoute: [LibraryDL()],
     splashScreen: SplashPage(),
     // Non-navigation related fields are still available
