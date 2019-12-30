@@ -3,19 +3,16 @@ import 'package:flutter/widgets.dart';
 import 'package:deep_link_navigation/src/deep_link.dart';
 
 /// Widget for route.
-typedef PathBuilder = Widget Function(String path);
+typedef PathBuilder = Widget Function(List<DeepLink> route);
 
 /// Widget for route with [value].
-typedef ValueBuilder<T> = Widget Function(T value, String path);
+typedef ValueBuilder<T> = Widget Function(T value, List<DeepLink> route);
 
 /// Route mapping for [exception].
-typedef ErrorMapping = List<DeepLink> Function(Exception exception, String path);
-
-/// Dispatcher for this level of navigation.
-typedef NavigationBuilder = Dispatcher Function(BuildContext context);
+typedef ErrorMapping = List<DeepLink> Function(Exception exception, List<DeepLink> route);
 
 /// Dispatcher for this level of navigation with [value].
-typedef NavigationValueBuilder<T> = Dispatcher Function(BuildContext context, T value);
+typedef NavigationValueBuilder<T> = Dispatcher Function(T value);
 
 /// A non-leaf node in the navigation hierarchy tree.
 class Dispatcher {
@@ -37,22 +34,22 @@ class Dispatcher {
   /// Add a path widget builder to this level of hierarchy.
   void path<DL extends DeepLink>(
     PathBuilder builder,
-    {NavigationBuilder subNavigation}
+    {Dispatcher subNavigation}
   ) {
     assert(DL != dynamic, "A deep link type must be specified.");
     assert(!routeBuilders.containsKey(DL), "A widget builder for ${DL.runtimeType} has already beed defined.");
     assert(builder != null);
 
-    _routeBuilders[DL] = (_, path) => builder(path);
+    _routeBuilders[DL] = (_, route) => builder(route);
 
     if (subNavigation != null) {
-      _subNavigations[DL] = (context, _) => subNavigation(context);
+      _subNavigations[DL] = (_) => subNavigation;
     }
   }
 
   /// Add a value widget builder to this level of hierarchy.
   void value<T, DL extends ValueDeepLink<T>>(
-    Widget Function(T value, String path) builder,
+    ValueBuilder<T> builder,
     {NavigationValueBuilder<T> subNavigation}
   ) {
     assert(T != dynamic, "Data type must be specified.");

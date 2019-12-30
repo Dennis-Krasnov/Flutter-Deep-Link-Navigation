@@ -1,3 +1,9 @@
+## [1.3.1] - 2019/12/09
+
+* Breaking change: Changed path (string) to route (List<DeepLink>) in configuration
+* Breaking change: navigation and subNavigation no longer takes context as argument, no function for path
+* Updated documentation and examples
+
 ## [1.2.1] - 2019/11/16
 
 * Removed context from exception mapping

@@ -14,7 +14,7 @@ class DeepLinkNavigator with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey;
 
   /// Top-level dispatcher to represent deep link navigation hierarchy.
-  final NavigationBuilder navigation;
+  final Dispatcher navigation;
 
   /// Initial route of application.
   /// [RouteNotFound] exception defaults back to this route.
@@ -52,14 +52,11 @@ class DeepLinkNavigator with ChangeNotifier {
   Future<T> _handleRouteChanged<T extends Object>([Future<T> promise]) {
     handlePop();
 
-    // Current context of native navigator
-    final context = navigatorKey.currentContext;
-
     // Mutable route built up level-by-level
     var accumulatedRoute = <DeepLink>[];
 
     // Deep link dispatcher at the next level of navigation hierarchy
-    var nextDispatcher = navigation(context);
+    var nextDispatcher = navigation;
 
     // Whether this is the last level of navigation hierarchy
     // This doesn't affect the base (first level) navigation
@@ -82,7 +79,7 @@ class DeepLinkNavigator with ChangeNotifier {
 
         // Attempt to go deeper in navigation
         if (currentDispatcher.subNavigations.containsKey(deepLink.runtimeType)) {
-          nextDispatcher = currentDispatcher.subNavigations[deepLink.runtimeType](context, deepLink is ValueDeepLink ? deepLink.data : null);
+          nextDispatcher = currentDispatcher.subNavigations[deepLink.runtimeType](deepLink is ValueDeepLink ? deepLink.data : null);
           assert(nextDispatcher != null);
         }
         else {
@@ -110,23 +107,22 @@ class DeepLinkNavigator with ChangeNotifier {
 
         // Append deep link to accumulated route
         accumulatedRoute.add(deepLink);
-        final accumulatedPath = accumulatedRoute.join("/");
 
         // Only return push promise on last deep link
         if (actionWasPush && deepLink == currentRoute.last) {
-          return _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedPath, accumulatedRoute);
+          return _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedRoute);
         }
-        _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedPath, accumulatedRoute);
+        _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedRoute);
       }
     } on RouteNotFound catch(exception) {
-      final route = errors[exception.runtimeType](exception, accumulatedRoute.join("/"));
+      final route = errors[exception.runtimeType](exception, List.from(accumulatedRoute));
       assert(route != null && route.isNotEmpty);
 
       navigateTo(route);
     } on Exception catch(exception) {
       if (!errors.containsKey(exception.runtimeType)) rethrow;
 
-      final route = errors[exception.runtimeType](exception, accumulatedRoute.join("/"));
+      final route = errors[exception.runtimeType](exception, List.from(accumulatedRoute));
       assert(route != null && route.isNotEmpty);
 
       navigateTo(route);
@@ -149,12 +145,12 @@ class DeepLinkNavigator with ChangeNotifier {
 
   /// Pushes widgets for deep links for deep links that didn't exist in previous route.
   @optionalTypeArgs
-  Future<T> _pushNavigatorIfNecessary<T extends Object>(DeepLink deepLink, Dispatcher currentDispatcher, String accumulatedPath, List<DeepLink> accumulatedRoute) {
+  Future<T> _pushNavigatorIfNecessary<T extends Object>(DeepLink deepLink, Dispatcher currentDispatcher, List<DeepLink> accumulatedRoute) {
     if (previousRoute.isEmpty || currentRoute.sublist(commonElementsInRoutes).contains(deepLink)) {
       // Widget that corresponds with deep link
       final widget = currentDispatcher.routeBuilders[deepLink.runtimeType](
         deepLink is ValueDeepLink ? deepLink.data : null,
-        accumulatedPath,
+        accumulatedRoute,
       );
       assert(widget != null);
 

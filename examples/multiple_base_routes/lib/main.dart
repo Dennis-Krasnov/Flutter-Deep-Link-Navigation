@@ -18,7 +18,7 @@ import 'package:multiple_base_routes/widgets/user_page.dart';
 void main() => runApp(
   // State management of your choice
   ChangeNotifierProvider<AuthenticationService>(
-    builder: (_) => AuthenticationService(),
+    create: (_) => AuthenticationService(),
     child: MusicApp(),
   )
 );
@@ -36,29 +36,31 @@ class MusicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DeepLinkMaterialApp(
     // This is where the magic happens
-    navigation: (context) => Dispatcher()
+    navigation: Dispatcher()
       // RouteNotFound error page
-      ..exception<RouteNotFound>((exception, path) => [ErrorDL<RouteNotFound>(exception)])
-      ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, path) => ErrorPage(exception))
+      ..exception<RouteNotFound>((exception, route) => [ErrorDL<RouteNotFound>(exception)])
+      ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, route) => ErrorPage(exception))
       // Unauthenticated login page
-      ..exception<Unauthenticated>((exception, path) => [LoginDL()])
+      ..exception<Unauthenticated>((exception, route) => [LoginDL()])
       ..path<LoginDL>((path) => LoginPage())
       // The rest of the app
       ..path<LibraryDL>(
-        (path) => LibraryPage(),
-        subNavigation: (context) => Dispatcher()
+        (route) => LibraryPage(),
+        subNavigation: Dispatcher()
           ..value<Artist, ArtistDL>(
-            (artist, path) => ArtistPage(artist: artist),
-            subNavigation: (context, artist) => Dispatcher()..value<Song, SongDL>((song, path) => SongPage(song: song)), // TODO: static extension method
+            (artist, route) => ArtistPage(artist: artist),
+            subNavigation: (artist) => Dispatcher()
+              ..song()
           ),
       )
       ..path<FavoritesDL>(
-        (path) => FavoritesPage(),
-        subNavigation: (context) => Dispatcher()..value<Song, SongDL>((song, path) => SongPage(song: song)), // TODO: static extension method
+        (route) => FavoritesPage(),
+        subNavigation: Dispatcher()
+          ..song()
       )
       ..path<UserDL>(
-        (path) => UserPage(),
-        subNavigation: (context) => Dispatcher()..path<AuthenticationDL>((path) => AuthenticationPage()),
+        (route) => UserPage(),
+        subNavigation: Dispatcher()..path<AuthenticationDL>((route) => AuthenticationPage()),
       ),
     defaultRoute: [LibraryDL()],
     splashScreen: SplashPage(),
@@ -79,4 +81,9 @@ class MusicApp extends StatelessWidget {
     // Non-navigation related fields are still available
     themeMode: ThemeMode.light,
   );
+}
+
+/// Reusing code through static extension methods.
+extension DispatcherExtensions on Dispatcher {
+  void song() => value<Song, SongDL>((song, route) => SongPage(song: song));
 }

@@ -24,13 +24,13 @@ class UserPage extends StatelessWidget {
 
             if (isNowAuthenticated != null) {
               if (isNowAuthenticated) {
-                Provider.of<AuthenticationService>(context).login();
+                Provider.of<AuthenticationService>(context, listen: false).login();
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text("You're already authenticated, nothing should change")
                 ));
               }
               else {
-                Provider.of<AuthenticationService>(context).logout();
+                Provider.of<AuthenticationService>(context, listen: false).logout();
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text("Try navigating to a page that requires authentication")
                 ));

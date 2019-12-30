@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
           key: Key("login"),
           child: Text("Login"),
           onPressed: () {
-            Provider.of<AuthenticationService>(context).login();
+            Provider.of<AuthenticationService>(context, listen: false).login();
             DeepLinkNavigator.of(context).replaceWithDefault();
           }
         ),

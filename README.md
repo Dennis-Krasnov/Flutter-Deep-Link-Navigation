@@ -1,9 +1,9 @@
 # Flutter Deep Link Navigation
 
-[![pub.dev package](https://img.shields.io/badge/pub.dev-1.2.1-red?style=flat)](https://pub.dev/packages/deep_link_navigation)
+[![pub.dev package](https://img.shields.io/badge/pub.dev-1.3.1-red?style=flat)](https://pub.dev/packages/deep_link_navigation)
 [![Github stars](https://img.shields.io/github/stars/Dennis-Krasnov/Flutter-Deep-Link-Navigation?style=flat)](https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation)
 [![Open source license](https://img.shields.io/github/license/Dennis-Krasnov/Flutter-Deep-Link-Navigation.svg?style=flat)](https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/blob/master/LICENSE)
-<!-- [![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat)](https://stackoverflow.com/questions/tagged/flutter?sort=votes) -->
+[![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat)](https://github.com/Solido/awesome-flutter#navigation)
 
 <!-- [![codecov](https://codecov.io/gh/Dennis-Krasnov/Diet-Driven/branch/bloc/graph/badge.svg)](https://codecov.io/gh/Dennis-Krasnov/Diet-Driven) -->
 <!-- [![Codemagic build status](https://api.codemagic.io/apps/5d8d561b6fd630197006310b/5d8d561b6fd630197006310a/status_badge.svg)](https://codemagic.io/apps/5d8d561b6fd630197006310b/5d8d561b6fd630197006310a/latest_build) -->
@@ -26,32 +26,33 @@ Hence why if you decide to use deep links, it makes sense to exclusively use dee
 **If you try to implement complete deep linking yourself here's some of the issues you'll run into:**
 * Widgets become coupled with their place in the navigation hierarchy
     - Becomes an issue if you want to reuse a page
-    - No amount of fancy iteration or recursion will save you
+    - No amount of fancy iteration or recursion will help
 * It's difficult to 'pass down' deep link values used in higher levels
     - Given the hierarchy is `Artist` --> `Song`
     - Being able to do `(artist) => ArtistPage(artist)` and later `(song) => SongPage(artist, song)`
     - I actually published a [rest-like router package](https://pub.dev/packages/rest_router) while trying to solve this issue
 * How do you represent deep links internally?
     - How to keep configuration as terse as possible?
-    - Current route in a string-friendly format (eg. for analytics, debugging)
-    - Serialized to be shared and used with a platform-level deep linking solution
-    - How do you handle native navigator pops (eg. back button)?
-    - How do you handle a route that doesn't exist (or any other exception that occurs during evaluation)?
+    - How to represent current route in a string-friendly format (eg. for analytics, debugging)
+    - How to serialize route to be used with a platform-level deep linking solution
+    - How to handle native navigator pops (eg. back button)?
+    - How to handle a route that doesn't exist (or any other exception that occurs during dispatch)?
 * How do you integrate custom logic for validating deep link navigation?
-    - Provide context to be able to access state management
+    - Ideally provide context to be able to access state management
     - eg. certain subtrees of the navigation hierarchy are available only for subscribed or authenticated users
 
 **TL;DR**
 
 I separated the navigation system from [Diet Driven](https://github.com/Dennis-Krasnov/Diet-Driven) (shameless plug, [please hire me](https://denniskrasnov.com/)) into its own package and published it.
 
-This package provides an elegant solution for all the aforementioned difficulties.
+This package provides a solution for all the aforementioned difficulties.
 
 ## Examples
 ### [Single base route](https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/tree/master/examples/single_base_route)
 **This example demonstrates:**
 * Dispatchers with path-only deep links
 * Dispatchers with value deep links (ArtistDL, SongDL)
+* Exception handling (RouteNotFoundDL)
 * Cross-branch navigation (from favorite's song page to artist page)
 ![Navigation diagram for multiple base routes example](examples/single_base_route/navigation.png)
 
@@ -60,7 +61,7 @@ This package provides an elegant solution for all the aforementioned difficultie
 * Everything from single base route example
 * Bottom navigation (library, favorites, user pages) persists across navigation
 * Login and error pages are full screen (hide bottom navigation)
-* Using the future result of push in user/authentication page
+* Using the asynchronous result of push (AuthenticationDL from UserDL)
 * Custom `Authenticated` mixin ensures user is authenticated (LibraryDL, FavoritesDL, UserDL)
 ![Navigation diagram for multiple base routes example](examples/multiple_base_routes/navigation.png)
 
@@ -97,6 +98,8 @@ class SongDL extends ValueDeepLink<Song> {
 
 **Mixin for sake of inheritence**
 
+This could also be achieved by implementing an abstract class.
+
 See use in *Child builder* section.
 ```dart
 mixin FullScreen on DeepLink {}
@@ -125,8 +128,8 @@ mixin Authenticated on DeepLink {
 
 navigation: (context) => Dispatcher()
     // Unauthenticated login page
-    ..exception<Unauthenticated>((exception, path) => [LoginDL()])
-    ..path<LoginDL>((path) => LoginPage()),
+    ..exception<Unauthenticated>((exception, route) => [LoginDL()])
+    ..path<LoginDL>((route) => LoginPage()),
 ```
 
 #### Application
@@ -152,25 +155,25 @@ DeepLinkMaterialApp(
 
 **Path dispatcher**
 ```dart
-..path<LoginDL>((path) => LoginPage()),
+..path<LoginDL>((route) => LoginPage()),
 ```
 
 **Value dispatcher**
 ```dart
-..value<Song, SongDL>((song, path) => SongPage(song: song)),
+..value<Song, SongDL>((song, route) => SongPage(song: song)),
 ```
 
 **Sub navigation**
 
 ```dart
 ..path<LibraryDL>(
-    (path) => LibraryPage(),
-    subNavigation: (context) => Dispatcher() // ...
+    (route) => LibraryPage(),
+    subNavigation: Dispatcher() // ...
 ),
 
 ..value<Song, SongDL>(
-    (song, path) => SongPage(song: song),
-    subNavigation: (context, song) => Dispatcher() // song may be used from this point onward
+    (song, route) => SongPage(song: song),
+    subNavigation: (song) => Dispatcher() // song may be used from this point onward
 ),
 ```
 
@@ -182,7 +185,7 @@ Exceptions that are thrown while running through the navigation hierarchy are ma
 
 If multiple mappings of the same type are found thoughout the hierarchy, the deep-most mapping is used.
 ```dart
-..exception<RouteNotFound>((exception, path) => [ErrorDL<RouteNotFound>(exception)])
+..exception<RouteNotFound>((exception, route) => [ErrorDL<RouteNotFound>(exception)])
 ```
 
 #### Child builder
@@ -215,7 +218,7 @@ childBuilder: (BuildContext context, DeepLinkNavigator deepLinkNavigator, Widget
 ```
 
 #### In-app navigation
-`DeepLinkNavigator` mirrors `Navigator`'s interface as much as possible (including push and pop working with futures).
+`DeepLinkNavigator` mirrors `Navigator`'s interface as much as possible (including push and pop futures).
 
 All methods internally orchestrate a native flutter navigator.
 
@@ -227,6 +230,10 @@ await DeepLinkNavigator.of(context).push(ArtistDL(...));
 **Pop a value**
 ```dart
 DeepLinkNavigator.of(context).pop(...);
+
+// or
+
+Navigator.of(context).pop(...);
 ```
 
 **Navigate to specific route**
@@ -244,7 +251,24 @@ DeepLinkNavigator.of(context).replaceWithDefault();
 
 **TODO: Throw exception to be caught by mapper**
 ```dart
-// DeepLinkNavigator.of(context).throw(Exception(...));
+// TODO DeepLinkNavigator.of(context).throw(Exception(...));
+```
+
+**TODO: Access deep link navigator from anywhere**
+```dart
+// TODO DeepLinkNavigator()...
+```
+
+**TODO: Page transitions**
+```dart
+// await DeepLinkNavigator.of(context).push(
+//   ArtistDL(...),
+//   transition: ...,
+//   duration: ...,
+// );
+
+// Possibly:
+// await DeepLinkNavigator.of(context).fadeIn(...);
 ```
 
 ## Platform deep links
@@ -259,6 +283,10 @@ DeepLinkNavigator.of(context).replaceWithDefault();
 * Can't store separate persisted navigation states for a multi-base route application (think Instagram)
 
 ## What's left to do
+
+[ ] Custom/predefined page transitions
+
+[ ] Access deep link navigator from anywhere using static method and factory pattern
 
 [ ] Assert `RouteNotFound` dispatcher exists by running through navigation tree
 

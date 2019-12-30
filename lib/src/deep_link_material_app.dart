@@ -14,7 +14,7 @@ class DeepLinkMaterialApp extends MaterialApp {
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
   /// Top-level dispatcher to represent deep link navigation hierarchy.
-  final NavigationBuilder navigation;
+  final Dispatcher navigation;
 
   /// {@macro flutter.widgets.widgetsApp.builder}
   ///
@@ -82,7 +82,7 @@ class DeepLinkMaterialApp extends MaterialApp {
     ],
     // Provider for easy access through ListenableProvider.of(context) and rebuild capabilities
     builder: (BuildContext context, Widget child) => ListenableProvider<DeepLinkNavigator>(
-      builder: (BuildContext context) => DeepLinkNavigator(
+      create: (BuildContext context) => DeepLinkNavigator(
         navigatorKey: _navigatorKey,
         navigation: navigation,
         defaultRoute: defaultRoute,
