@@ -16,12 +16,11 @@ import 'package:multiple_base_routes/widgets/splash_page.dart';
 import 'package:multiple_base_routes/widgets/user_page.dart';
 
 void main() => runApp(
-  // State management of your choice
-  ChangeNotifierProvider<AuthenticationService>(
-    create: (_) => AuthenticationService(),
-    child: MusicApp(),
-  )
-);
+        // State management of your choice
+        ChangeNotifierProvider<AuthenticationService>(
+      create: (_) => AuthenticationService(),
+      child: MusicApp(),
+    ));
 
 /// [DeepLink]s associated with the bottom navigation.
 final bottomNavigationDeepLinks = [LibraryDL(), FavoritesDL(), UserDL()];
@@ -35,52 +34,77 @@ int currentIndex(List<DeepLink> currentRoute) {
 class MusicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DeepLinkMaterialApp(
-    // This is where the magic happens
-    navigation: Dispatcher()
-      // RouteNotFound error page
-      ..exception<RouteNotFound>((exception, route) => [ErrorDL<RouteNotFound>(exception)])
-      ..value<RouteNotFound, ErrorDL<RouteNotFound>>((exception, route) => ErrorPage(exception))
-      // Unauthenticated login page
-      ..exception<Unauthenticated>((exception, route) => [LoginDL()])
-      ..path<LoginDL>((path) => LoginPage())
-      // The rest of the app
-      ..path<LibraryDL>(
-        (route) => LibraryPage(),
-        subNavigation: Dispatcher()
-          ..value<Artist, ArtistDL>(
-            (artist, route) => ArtistPage(artist: artist),
-            subNavigation: (artist) => Dispatcher()
-              ..song()
+        // This is where the magic happens
+        navigation: Dispatcher()
+          // RouteNotFound error page
+          ..exception<RouteNotFound>(
+              (exception, route) => [ErrorDL<RouteNotFound>(exception)])
+          ..value<RouteNotFound, ErrorDL<RouteNotFound>>(
+              (exception, route) => ErrorPage(exception))
+          // Unauthenticated login page
+          ..exception<Unauthenticated>((exception, route) => [LoginDL()])
+          ..pathRoute<LoginDL>((path) => MaterialPageRoute(
+                builder: (_) => LoginPage(),
+              ))
+          // The rest of the app
+          ..pathRoute<LibraryDL>(
+            (route) => PageTransition(
+              type: PageTransitionType.fade,
+              child: LibraryPage(),
+            ),
+            subNavigation: Dispatcher()
+              ..valueRoute<Artist, ArtistDL>(
+                (artist, route) => ArtistPage(artist: artist).scaleTransition(
+                  alignment: Alignment.center,
+                  duration: Duration(milliseconds: 800),
+                ),
+                subNavigation: (artist) => Dispatcher()..song(),
+              ),
+          )
+          ..pathRoute<FavoritesDL>(
+              (route) => FavoritesPage().rotateTransition(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.bounceInOut,
+                    alignment: Alignment.center,
+                  ),
+              subNavigation: Dispatcher()..song())
+          ..pathRoute<UserDL>(
+            (route) => UserPage().customTransition(PageTransitionType.upToDown),
+            subNavigation: Dispatcher()
+              ..path<AuthenticationDL>((route) => AuthenticationPage()),
           ),
-      )
-      ..path<FavoritesDL>(
-        (route) => FavoritesPage(),
-        subNavigation: Dispatcher()
-          ..song()
-      )
-      ..path<UserDL>(
-        (route) => UserPage(),
-        subNavigation: Dispatcher()..path<AuthenticationDL>((route) => AuthenticationPage()),
-      ),
-    defaultRoute: [LibraryDL()],
-    splashScreen: SplashPage(),
-    // Optionally specify always visible widgets
-    childBuilder: (BuildContext context, DeepLinkNavigator deepLinkNavigator, Widget child) => Scaffold(
-      body: child,
-      // Don't show bottom navigation while [currentRoute] is null, or any deep list is [FullScreen]
-      bottomNavigationBar: deepLinkNavigator.currentRoute?.any((dl) => dl is FullScreen) ?? true ? null : BottomNavigationBar(
-        currentIndex: currentIndex(deepLinkNavigator.currentRoute),
-        onTap: (int index) => deepLinkNavigator.navigateTo([bottomNavigationDeepLinks[index]]),
-        items: [
-          BottomNavigationBarItem(title: Text("Library"), icon: Icon(Icons.queue_music, key: Key("library"))),
-          BottomNavigationBarItem(title: Text("Favorites"), icon: Icon(Icons.favorite, key: Key("favorites"))),
-          BottomNavigationBarItem(title: Text("User"), icon: Icon(Icons.person, key: Key("user"))),
-        ],
-      ),
-    ),
-    // Non-navigation related fields are still available
-    themeMode: ThemeMode.light,
-  );
+        defaultRoute: [LibraryDL()],
+        splashScreen: SplashPage(),
+        // Optionally specify always visible widgets
+        childBuilder: (BuildContext context,
+                DeepLinkNavigator deepLinkNavigator, Widget child) =>
+            Scaffold(
+          body: child,
+          // Don't show bottom navigation while [currentRoute] is null, or any deep list is [FullScreen]
+          bottomNavigationBar: deepLinkNavigator.currentRoute
+                      ?.any((dl) => dl is FullScreen) ??
+                  true
+              ? null
+              : BottomNavigationBar(
+                  currentIndex: currentIndex(deepLinkNavigator.currentRoute),
+                  onTap: (int index) => deepLinkNavigator
+                      .navigateTo([bottomNavigationDeepLinks[index]]),
+                  items: [
+                    BottomNavigationBarItem(
+                        title: Text("Library"),
+                        icon: Icon(Icons.queue_music, key: Key("library"))),
+                    BottomNavigationBarItem(
+                        title: Text("Favorites"),
+                        icon: Icon(Icons.favorite, key: Key("favorites"))),
+                    BottomNavigationBarItem(
+                        title: Text("User"),
+                        icon: Icon(Icons.person, key: Key("user"))),
+                  ],
+                ),
+        ),
+        // Non-navigation related fields are still available
+        themeMode: ThemeMode.light,
+      );
 }
 
 /// Reusing code through static extension methods.

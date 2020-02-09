@@ -147,17 +147,19 @@ class DeepLinkNavigator with ChangeNotifier {
   @optionalTypeArgs
   Future<T> _pushNavigatorIfNecessary<T extends Object>(DeepLink deepLink, Dispatcher currentDispatcher, List<DeepLink> accumulatedRoute) {
     if (previousRoute.isEmpty || currentRoute.sublist(commonElementsInRoutes).contains(deepLink)) {
-      // Widget that corresponds with deep link
-      final widget = currentDispatcher.routeBuilders[deepLink.runtimeType](
+      // Widget or Route that corresponds with deep link
+      final widgetOrRoute = currentDispatcher.routeBuilders[deepLink.runtimeType](
         deepLink is ValueDeepLink ? deepLink.data : null,
         accumulatedRoute,
       );
-      assert(widget != null);
+      assert(widgetOrRoute != null);
 
       // Animate only push (and thus pop) transitions
-      final pageRoute = actionWasPush
-        ? MaterialPageRoute<T>(builder: (BuildContext context) => widget)
-        : NoAnimationPageRoute<T>(builder: (BuildContext context) => widget);
+      final pageRoute = widgetOrRoute is Route
+        ? widgetOrRoute
+        : actionWasPush
+          ? MaterialPageRoute<T>(builder: (BuildContext context) => widgetOrRoute)
+          : NoAnimationPageRoute<T>(builder: (BuildContext context) => widgetOrRoute);
 
       // Replace root level pages
       final action = accumulatedRoute.length == 1

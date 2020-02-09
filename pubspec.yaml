@@ -1,13 +1,13 @@
 name: deep_link_navigation
 description: Deep link navigation for Flutter apps with an elegant configuation internally orchestrating a native Flutter navigator.
-version: 1.3.1
+version: 1.4.0
 author: Dennis Krasnov <dennis@krasnov.dev>
 homepage: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation
 repository: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation
 issue_tracker: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/issues
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
