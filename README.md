@@ -158,8 +158,7 @@ DeepLinkMaterialApp(
 ..path<LoginDL>((route) => LoginPage()),
 
 ..pathRoute<LoginDL>((path) => MaterialPageRoute(
-    builder: (_) => LoginPage())), // with a custom page route or 
-    a custom PageRouteBuilder that implement custom route transitions
+    builder: (_) => LoginPage())), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
 
 ..pathRoute<LoginDL>(
     (route) => PageTransition(
@@ -168,8 +167,7 @@ DeepLinkMaterialApp(
     ),
  ), // with custom PageTransition, an implementation of PageRouteBuilder provided by this package
 
-..pathRoute<LoginDL>((route) => LoginPage().fadeTransition()) // with one of the custom transition extensions 
-provided by this package
+..pathRoute<LoginDL>((route) => LoginPage().fadeTransition()) // with one of the custom transition extensions provided by this package
 ..
 ```
 
@@ -178,8 +176,7 @@ provided by this package
 ..value<Song, SongDL>((song, route) => SongPage(song: song)),
 
 .valueRoute<Song, SongDL>((song, route) => MaterialPageRoute(
-    builder: (_) => SongPage(song: song))), // with a custom page route 
-    or a custom PageRouteBuilder that implement custom route transitions
+    builder: (_) => SongPage(song: song))), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
 
 ..valueRoute<Artist, ArtistDL>(
     (artist, route) => ArtistPage(artist: artist).scaleTransition(
