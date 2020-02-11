@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:deep_link_navigation/src/deep_link_transition.dart';
 
 class DeepLinkTransitions {
-  static PathTransitionBuilder fadeTransition({
+  static PathTransitionBuilder fade({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -18,7 +18,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder rightToLeftTransition({
+  static PathTransitionBuilder rightToLeft({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -33,7 +33,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder leftToRightTransition({
+  static PathTransitionBuilder leftToRight({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -48,7 +48,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder upToDownTransition({
+  static PathTransitionBuilder upToDown({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -63,7 +63,7 @@ class DeepLinkTransitions {
         child: child,
       );
   
-  static PathTransitionBuilder downToUpTransition({
+  static PathTransitionBuilder downToUp({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -78,7 +78,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder scaleTransition({
+  static PathTransitionBuilder scale({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -93,7 +93,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder rotateTransition({
+  static PathTransitionBuilder rotate({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -108,7 +108,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder sizeTransition({
+  static PathTransitionBuilder size({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -123,7 +123,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder rightToLeftWithFadeTransition({
+  static PathTransitionBuilder rightToLeftWithFade({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -138,7 +138,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder leftToRightWithFadeTransition({
+  static PathTransitionBuilder leftToRightWithFade({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
@@ -153,7 +153,7 @@ class DeepLinkTransitions {
         child: child,
       );
 
-  static PathTransitionBuilder customTransition(
+  static PathTransitionBuilder custom(
     DeepLinkTransitionType type, {
     Key key,
     Curve curve = Curves.linear,

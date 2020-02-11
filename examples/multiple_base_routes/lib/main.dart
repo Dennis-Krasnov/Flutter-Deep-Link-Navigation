@@ -57,7 +57,7 @@ class MusicApp extends StatelessWidget {
             subNavigation: Dispatcher()
               ..value<Artist, ArtistDL>(
                 (artist, route) => ArtistPage(artist: artist),
-                transition: DeepLinkTransitions.scaleTransition(
+                transition: DeepLinkTransitions.scale(
                   alignment: Alignment.center,
                   duration: Duration(milliseconds: 800),
                 ),
@@ -65,7 +65,7 @@ class MusicApp extends StatelessWidget {
               ),
           )
           ..path<FavoritesDL>((route) => FavoritesPage(),
-              transition: DeepLinkTransitions.rotateTransition(
+              transition: DeepLinkTransitions.rotate(
                 duration: Duration(milliseconds: 500),
                 curve: Curves.bounceInOut,
                 alignment: Alignment.center,
@@ -73,7 +73,7 @@ class MusicApp extends StatelessWidget {
               subNavigation: Dispatcher()..song())
           ..path<UserDL>(
             (route) => UserPage(),
-            transition: DeepLinkTransitions.customTransition(
+            transition: DeepLinkTransitions.custom(
                 DeepLinkTransitionType.upToDown),
             subNavigation: Dispatcher()
               ..path<AuthenticationDL>((route) => AuthenticationPage()),

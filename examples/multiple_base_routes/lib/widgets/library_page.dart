@@ -25,7 +25,7 @@ class LibraryPage extends StatelessWidget {
               onTap: () => DeepLinkNavigator.of(context).push(
                 ArtistDL(artist),
                 transition: artist.name.startsWith('Ludwig')
-                    ? DeepLinkTransitions.rotateTransition(
+                    ? DeepLinkTransitions.rotate(
                         duration: Duration(milliseconds: 500),
                         curve: Curves.bounceInOut,
                         alignment: Alignment.center,
