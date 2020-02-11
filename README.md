@@ -187,7 +187,7 @@ DeepLinkMaterialApp(
 
 ..valueRoute<Artist, ArtistDL>(
     (artist, route) => ArtistPage(artist: artist),
-    transition: DeepLinkTransition.scale(
+    transition: DeepLinkTransitions.scale(
         alignment: Alignment.center,
         duration: Duration(milliseconds: 800),
     ),
@@ -300,18 +300,6 @@ DeepLinkNavigator.of(context).replaceWithDefault(transition: ...); //with transi
 **TODO: Access deep link navigator from anywhere**
 ```dart
 // TODO DeepLinkNavigator()...
-```
-
-**TODO: Page transitions**
-```dart
-// await DeepLinkNavigator.of(context).push(
-//   ArtistDL(...),
-//   transition: ...,
-//   duration: ...,
-// );
-
-// Possibly:
-// await DeepLinkNavigator.of(context).fadeIn(...);
 ```
 
 ## Platform deep links
