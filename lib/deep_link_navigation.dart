@@ -6,4 +6,4 @@ export 'src/deep_link_navigator.dart';
 export 'src/dispatchers.dart';
 export 'src/exceptions.dart';
 export 'src/deep_link_transition.dart';
-export 'src/deep_link_transition_extensions.dart';
+export 'src/deep_link_transitions.dart';

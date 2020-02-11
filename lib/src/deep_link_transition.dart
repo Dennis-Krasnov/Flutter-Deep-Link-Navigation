@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum PageTransitionType {
+enum DeepLinkTransitionType {
   fade,
   rightToLeft,
   leftToRight,
@@ -13,14 +13,14 @@ enum PageTransitionType {
   leftToRightWithFade,
 }
 
-class PageTransition<T> extends PageRouteBuilder<T> {
+class DeepLinkTransition<T> extends PageRouteBuilder<T> {
   final Widget child;
-  final PageTransitionType type;
+  final DeepLinkTransitionType type;
   final Curve curve;
   final Alignment alignment;
   final Duration duration;
 
-  PageTransition({
+  DeepLinkTransition({
     Key key,
     @required this.child,
     @required this.type,
@@ -38,10 +38,10 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                 Animation<double> secondaryAnimation,
                 Widget child) {
               switch (type) {
-                case PageTransitionType.fade:
-                  return FadeTransition(opacity: animation, child: child);
+                case DeepLinkTransitionType.fade:
+                return FadeTransition(opacity: animation, child: child);
                   break;
-                case PageTransitionType.rightToLeft:
+                case DeepLinkTransitionType.rightToLeft:
                   return SlideTransition(
                     transformHitTests: false,
                     position: new Tween<Offset>(
@@ -57,7 +57,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.leftToRight:
+                case DeepLinkTransitionType.leftToRight:
                   return SlideTransition(
                     transformHitTests: false,
                     position: Tween<Offset>(
@@ -73,7 +73,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.upToDown:
+                case DeepLinkTransitionType.upToDown:
                   return SlideTransition(
                     transformHitTests: false,
                     position: Tween<Offset>(
@@ -89,7 +89,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.downToUp:
+                case DeepLinkTransitionType.downToUp:
                   return SlideTransition(
                     transformHitTests: false,
                     position: Tween<Offset>(
@@ -105,7 +105,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.scale:
+                case DeepLinkTransitionType.scale:
                   return ScaleTransition(
                     alignment: alignment,
                     scale: CurvedAnimation(
@@ -119,7 +119,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     child: child,
                   );
                   break;
-                case PageTransitionType.rotate:
+                case DeepLinkTransitionType.rotate:
                   return new RotationTransition(
                     alignment: alignment,
                     turns: animation,
@@ -133,7 +133,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.size:
+                case DeepLinkTransitionType.size:
                   return Align(
                     alignment: alignment,
                     child: SizeTransition(
@@ -145,7 +145,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.rightToLeftWithFade:
+                case DeepLinkTransitionType.rightToLeftWithFade:
                   return SlideTransition(
                     position: Tween<Offset>(
                       begin: const Offset(1.0, 0.0),
@@ -163,7 +163,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
                     ),
                   );
                   break;
-                case PageTransitionType.leftToRightWithFade:
+                case DeepLinkTransitionType.leftToRightWithFade:
                   return SlideTransition(
                     position: Tween<Offset>(
                       begin: const Offset(-1.0, 0.0),

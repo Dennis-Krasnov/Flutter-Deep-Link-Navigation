@@ -38,18 +38,18 @@ class DeepLinkNavigator with ChangeNotifier {
   /// Typical pop handling should be temporarily disabled.
   bool _poppingForDeepNavigation = false;
 
-  DeepLinkNavigator({
-    @required this.navigatorKey,
-    @required this.navigation,
-    this.defaultRoute
-  }) :
-    assert(navigation != null),
-    assert(defaultRoute == null || defaultRoute.isNotEmpty);
+  DeepLinkNavigator(
+      {@required this.navigatorKey,
+      @required this.navigation,
+      this.defaultRoute})
+      : assert(navigation != null),
+        assert(defaultRoute == null || defaultRoute.isNotEmpty);
 
   /// Handle a significant change of the current route.
   /// Optionally handles [promise] for pushes.
   @optionalTypeArgs
-  Future<T> _handleRouteChanged<T extends Object>([Future<T> promise]) {
+  Future<T> _handleRouteChanged<T extends Object>(
+      [PathTransitionBuilder transition, Future<T> promise]) {
     handlePop();
 
     // Mutable route built up level-by-level
@@ -70,7 +70,7 @@ class DeepLinkNavigator with ChangeNotifier {
       for (final deepLink in currentRoute) {
         // Throw if further navigation can't be found
         if (endOfNavigationHierarchy) {
-          throw(RouteNotFound(currentRoute));
+          throw (RouteNotFound(currentRoute));
         }
 
         // Deep link dispatcher at this level of navigation hierarchy
@@ -78,22 +78,26 @@ class DeepLinkNavigator with ChangeNotifier {
         assert(currentDispatcher.routeBuilders.isNotEmpty);
 
         // Attempt to go deeper in navigation
-        if (currentDispatcher.subNavigations.containsKey(deepLink.runtimeType)) {
-          nextDispatcher = currentDispatcher.subNavigations[deepLink.runtimeType](deepLink is ValueDeepLink ? deepLink.data : null);
+        if (currentDispatcher.subNavigations
+            .containsKey(deepLink.runtimeType)) {
+          nextDispatcher =
+              currentDispatcher.subNavigations[deepLink.runtimeType](
+                  deepLink is ValueDeepLink ? deepLink.data : null);
           assert(nextDispatcher != null);
-        }
-        else {
+        } else {
           endOfNavigationHierarchy = true;
         }
 
         // Merge and override error mappings
         errors = mergeMap([errors, currentDispatcher.errorMappers]);
-        assert(errors.containsKey(RouteNotFound), "Must specify `exception<RouteNotFound>` on base navigation builder.");
+        assert(errors.containsKey(RouteNotFound),
+            "Must specify `exception<RouteNotFound>` on base navigation builder.");
 
         // Attempt to find deep link
         try {
-          if (!currentDispatcher.routeBuilders.containsKey(deepLink.runtimeType)) {
-            throw(RouteNotFound(currentRoute));
+          if (!currentDispatcher.routeBuilders
+              .containsKey(deepLink.runtimeType)) {
+            throw (RouteNotFound(currentRoute));
           }
 
           // Custom logic can throw custom exceptions
@@ -110,22 +114,34 @@ class DeepLinkNavigator with ChangeNotifier {
 
         // Only return push promise on last deep link
         if (actionWasPush && deepLink == currentRoute.last) {
-          return _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedRoute);
+          return _pushNavigatorIfNecessary<T>(
+            deepLink,
+            currentDispatcher,
+            accumulatedRoute,
+            transition,
+          );
         }
-        _pushNavigatorIfNecessary<T>(deepLink, currentDispatcher, accumulatedRoute);
+        _pushNavigatorIfNecessary<T>(
+          deepLink,
+          currentDispatcher,
+          accumulatedRoute,
+          deepLink == currentRoute.last ? transition : null,
+        );
       }
-    } on RouteNotFound catch(exception) {
-      final route = errors[exception.runtimeType](exception, List.from(accumulatedRoute));
+    } on RouteNotFound catch (exception) {
+      final route =
+          errors[exception.runtimeType](exception, List.from(accumulatedRoute));
       assert(route != null && route.isNotEmpty);
 
-      navigateTo(route);
-    } on Exception catch(exception) {
+      navigateTo(route, transition: transition);
+    } on Exception catch (exception) {
       if (!errors.containsKey(exception.runtimeType)) rethrow;
 
-      final route = errors[exception.runtimeType](exception, List.from(accumulatedRoute));
+      final route =
+          errors[exception.runtimeType](exception, List.from(accumulatedRoute));
       assert(route != null && route.isNotEmpty);
 
-      navigateTo(route);
+      navigateTo(route, transition: transition);
     }
     return null;
   }
@@ -134,37 +150,55 @@ class DeepLinkNavigator with ChangeNotifier {
   void handlePop() {
     _poppingForDeepNavigation = true;
     var _timesDidNotPop = 0;
-    for (final deepLink in previousRoute.sublist(commonElementsInRoutes).reversed) {
+    for (final deepLink
+        in previousRoute.sublist(commonElementsInRoutes).reversed) {
       // Allow base routes to be conceptually popped once since they're replaced instead of pushed
       if (navigatorKey.currentState.canPop()) {
         navigatorKey.currentState.pop();
-      } else assert(++_timesDidNotPop <= 1, "$deepLink caused a second pop to a base route");
+      } else
+        assert(++_timesDidNotPop <= 1,
+            "$deepLink caused a second pop to a base route");
     }
     _poppingForDeepNavigation = false;
   }
 
   /// Pushes widgets for deep links for deep links that didn't exist in previous route.
   @optionalTypeArgs
-  Future<T> _pushNavigatorIfNecessary<T extends Object>(DeepLink deepLink, Dispatcher currentDispatcher, List<DeepLink> accumulatedRoute) {
-    if (previousRoute.isEmpty || currentRoute.sublist(commonElementsInRoutes).contains(deepLink)) {
-      // Widget or Route that corresponds with deep link
-      final widgetOrRoute = currentDispatcher.routeBuilders[deepLink.runtimeType](
+  Future<T> _pushNavigatorIfNecessary<T extends Object>(
+    DeepLink deepLink,
+    Dispatcher currentDispatcher,
+    List<DeepLink> accumulatedRoute, [
+    PathTransitionBuilder transitionBuilder,
+  ]) {
+    if (previousRoute.isEmpty ||
+        currentRoute.sublist(commonElementsInRoutes).contains(deepLink)) {
+      // Widget that corresponds with deep link
+      final widget = currentDispatcher.routeBuilders[deepLink.runtimeType](
         deepLink is ValueDeepLink ? deepLink.data : null,
         accumulatedRoute,
       );
-      assert(widgetOrRoute != null);
+      assert(widget != null);
+
+      // TransitionBuilder that coresponds with deep link
+      final finalTransitionBuilder = transitionBuilder != null
+          ? transitionBuilder
+          : currentDispatcher.transitionBuilders
+                  .containsKey(deepLink.runtimeType)
+              ? currentDispatcher.transitionBuilders[deepLink.runtimeType]
+              : null;
 
       // Animate only push (and thus pop) transitions
-      final pageRoute = widgetOrRoute is Route
-        ? widgetOrRoute
-        : actionWasPush
-          ? MaterialPageRoute<T>(builder: (BuildContext context) => widgetOrRoute)
-          : NoAnimationPageRoute<T>(builder: (BuildContext context) => widgetOrRoute);
+      final pageRoute = finalTransitionBuilder != null
+          ? finalTransitionBuilder(widget)
+          : actionWasPush
+              ? MaterialPageRoute<T>(builder: (BuildContext context) => widget)
+              : NoAnimationPageRoute<T>(
+                  builder: (BuildContext context) => widget);
 
       // Replace root level pages
       final action = accumulatedRoute.length == 1
-        ? (pageRoute) => navigatorKey.currentState.pushReplacement(pageRoute)
-        : (pageRoute) => navigatorKey.currentState.push(pageRoute);
+          ? (pageRoute) => navigatorKey.currentState.pushReplacement(pageRoute)
+          : (pageRoute) => navigatorKey.currentState.push(pageRoute);
 
       // Reuse native navigator's completer
       return action(pageRoute);
@@ -173,41 +207,51 @@ class DeepLinkNavigator with ChangeNotifier {
   }
 
   /// Number of common deep links in [previousRoute] and [currentRoute].
-  int get commonElementsInRoutes => indexOfLastCommonElement(previousRoute ?? [], currentRoute);
+  int get commonElementsInRoutes =>
+      indexOfLastCommonElement(previousRoute ?? [], currentRoute);
 
   /// Pushes the given [deepLink] onto the navigator.
   /// Optionally returns a [T] value.
   @optionalTypeArgs
-  Future<T> push<T extends Object>(DeepLink deepLink) async {
+  Future<T> push<T extends Object>(
+    DeepLink deepLink, {
+    PathTransitionBuilder transition,
+  }) async {
     _previousRoute = List.from(currentRoute);
     currentRoute.add(deepLink);
     _actionWasPush = true;
 
     notifyListeners();
-    return _handleRouteChanged<T>();
+    return _handleRouteChanged<T>(transition);
   }
 
   /// Navigates to a specific route anywhere in the navigation hierarchy.
-  void navigateTo(List<DeepLink> route) {
+  void navigateTo(
+    List<DeepLink> route, {
+    PathTransitionBuilder transition,
+  }) {
     _previousRoute = List.from(currentRoute ?? []);
     _currentRoute = List.from(route);
     _actionWasPush = false;
 
     notifyListeners();
-    _handleRouteChanged();
+    _handleRouteChanged(transition);
   }
 
   /// Resets navigation to user's default page.
   /// Does nothing if [defaultRoute] is null.
-  void replaceWithDefault() {
+  void replaceWithDefault({
+    PathTransitionBuilder transition,
+  }) {
     if (defaultRoute != null) {
-      navigateTo(defaultRoute);
+      navigateTo(defaultRoute, transition: transition);
     }
   }
 
   /// Pop the top-most deep link off the navigator that most tightly encloses the given context.
   @optionalTypeArgs
-  bool pop<T extends Object>([T result]) => navigatorKey.currentState.pop(result);
+  bool pop<T extends Object>([T result]) =>
+      navigatorKey.currentState.pop(result);
 
   /// Handles deep link popping logic.
   /// Notified exclusively from native navigator's [PopObserver].

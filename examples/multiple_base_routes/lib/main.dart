@@ -43,33 +43,38 @@ class MusicApp extends StatelessWidget {
               (exception, route) => ErrorPage(exception))
           // Unauthenticated login page
           ..exception<Unauthenticated>((exception, route) => [LoginDL()])
-          ..pathRoute<LoginDL>((path) => MaterialPageRoute(
-                builder: (_) => LoginPage(),
-              ))
+          ..path<LoginDL>(
+            (route) => LoginPage(),
+            transition: (widget) => MaterialPageRoute(builder: (_) => widget),
+          )
           // The rest of the app
-          ..pathRoute<LibraryDL>(
-            (route) => PageTransition(
-              type: PageTransitionType.fade,
+          ..path<LibraryDL>(
+            (route) => LibraryPage(),
+            transition: (widget) => DeepLinkTransition(
+              type: DeepLinkTransitionType.fade,
               child: LibraryPage(),
             ),
             subNavigation: Dispatcher()
-              ..valueRoute<Artist, ArtistDL>(
-                (artist, route) => ArtistPage(artist: artist).scaleTransition(
+              ..value<Artist, ArtistDL>(
+                (artist, route) => ArtistPage(artist: artist),
+                transition: DeepLinkTransitions.scaleTransition(
                   alignment: Alignment.center,
                   duration: Duration(milliseconds: 800),
                 ),
                 subNavigation: (artist) => Dispatcher()..song(),
               ),
           )
-          ..pathRoute<FavoritesDL>(
-              (route) => FavoritesPage().rotateTransition(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.bounceInOut,
-                    alignment: Alignment.center,
-                  ),
+          ..path<FavoritesDL>((route) => FavoritesPage(),
+              transition: DeepLinkTransitions.rotateTransition(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.bounceInOut,
+                alignment: Alignment.center,
+              ),
               subNavigation: Dispatcher()..song())
-          ..pathRoute<UserDL>(
-            (route) => UserPage().customTransition(PageTransitionType.upToDown),
+          ..path<UserDL>(
+            (route) => UserPage(),
+            transition: DeepLinkTransitions.customTransition(
+                DeepLinkTransitionType.upToDown),
             subNavigation: Dispatcher()
               ..path<AuthenticationDL>((route) => AuthenticationPage()),
           ),

@@ -1,170 +1,171 @@
+import 'package:deep_link_navigation/src/dispatchers.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_link_navigation/src/deep_link_transition.dart';
 
-extension PageTransitionExtension on Widget {
-  PageTransition fadeTransition({
+class DeepLinkTransitions {
+  static PathTransitionBuilder fadeTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.fade,
+        type: DeepLinkTransitionType.fade,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition rightToLeftTransition({
+  static PathTransitionBuilder rightToLeftTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.rightToLeft,
+        type: DeepLinkTransitionType.rightToLeft,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition leftToRightTransition({
+  static PathTransitionBuilder leftToRightTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.leftToRight,
+        type: DeepLinkTransitionType.leftToRight,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition upToDownTransition({
+  static PathTransitionBuilder upToDownTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.upToDown,
+        type: DeepLinkTransitionType.upToDown,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
   
-  PageTransition downToUpTransition({
+  static PathTransitionBuilder downToUpTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.downToUp,
+        type: DeepLinkTransitionType.downToUp,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition scaleTransition({
+  static PathTransitionBuilder scaleTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.scale,
+        type: DeepLinkTransitionType.scale,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition rotateTransition({
+  static PathTransitionBuilder rotateTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.rotate,
+        type: DeepLinkTransitionType.rotate,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition sizeTransition({
+  static PathTransitionBuilder sizeTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.size,
+        type: DeepLinkTransitionType.size,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition rightToLeftWithFadeTransition({
+  static PathTransitionBuilder rightToLeftWithFadeTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.rightToLeftWithFade,
+        type: DeepLinkTransitionType.rightToLeftWithFade,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition leftToRightWithFadeTransition({
+  static PathTransitionBuilder leftToRightWithFadeTransition({
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
-        type: PageTransitionType.leftToRightWithFade,
+        type: DeepLinkTransitionType.leftToRightWithFade,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 
-  PageTransition customTransition(
-    PageTransitionType type, {
+  static PathTransitionBuilder customTransition(
+    DeepLinkTransitionType type, {
     Key key,
     Curve curve = Curves.linear,
     Alignment alignment,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageTransition(
+  }) => (child) =>
+      DeepLinkTransition(
         key: key,
         type: type,
         curve: curve,
         alignment: alignment,
         duration: duration,
-        child: this,
+        child: child,
       );
 }

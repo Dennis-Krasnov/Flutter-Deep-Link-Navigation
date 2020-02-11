@@ -22,7 +22,16 @@ class LibraryPage extends StatelessWidget {
               leading: CircleAvatar(child: Icon(Icons.person)),
               title: Text(artist.name),
               subtitle: Text("${artist.songs.length} songs"),
-              onTap: () => DeepLinkNavigator.of(context).push(ArtistDL(artist)),
+              onTap: () => DeepLinkNavigator.of(context).push(
+                ArtistDL(artist),
+                transition: artist.name.startsWith('Ludwig')
+                    ? DeepLinkTransitions.rotateTransition(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.bounceInOut,
+                        alignment: Alignment.center,
+                      )
+                    : null,
+              ),
             ),
           Divider(),
           ListTile(
@@ -30,14 +39,16 @@ class LibraryPage extends StatelessWidget {
             leading: CircleAvatar(child: Icon(Icons.bug_report)),
             title: Text("Non-existant push"),
             // Route doesn't exist
-            onTap: () => DeepLinkNavigator.of(context).push(SongDL(Data.favoriteSongs[0])),
+            onTap: () => DeepLinkNavigator.of(context)
+                .push(SongDL(Data.favoriteSongs[0])),
           ),
           ListTile(
             key: Key("Non-existant navigate"),
             leading: CircleAvatar(child: Icon(Icons.bug_report)),
             title: Text("Non-existant navigate"),
             // Route doesn't exist
-            onTap: () => DeepLinkNavigator.of(context).navigateTo([LibraryDL(), SongDL(Data.favoriteSongs[1])]),
+            onTap: () => DeepLinkNavigator.of(context)
+                .navigateTo([LibraryDL(), SongDL(Data.favoriteSongs[1])]),
           )
         ],
       ),

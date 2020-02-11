@@ -7,7 +7,7 @@ repository: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation
 issue_tracker: https://github.com/Dennis-Krasnov/Flutter-Deep-Link-Navigation/issues
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
