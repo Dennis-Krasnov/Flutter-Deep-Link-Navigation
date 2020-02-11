@@ -157,17 +157,22 @@ DeepLinkMaterialApp(
 ```dart
 ..path<LoginDL>((route) => LoginPage()),
 
-..pathRoute<LoginDL>((path) => MaterialPageRoute(
-    builder: (_) => LoginPage())), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
+..pathRoute<LoginDL>((path) => LoginPage(),
+    transition: (widget) => MaterialPageRoute(builder: (_) => widget),
+), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
+
+..path<LoginDL>(
+    (route) => LoginPage(),
+    transition: (widget) => DeepLinkTransition(
+        type: PageTransitionType.fade,
+        child: widget,
+    ),
+ ), // with custom DeepLinkTransition, an implementation of PageRouteBuilder provided by this package
 
 ..pathRoute<LoginDL>(
-    (route) => PageTransition(
-        type: PageTransitionType.fade,
-        child: LoginPage(),
-    ),
- ), // with custom PageTransition, an implementation of PageRouteBuilder provided by this package
-
-..pathRoute<LoginDL>((route) => LoginPage().fadeTransition()) // with one of the custom transition extensions provided by this package
+    (route) => LoginPage(),
+    transition: DeepLinkTransitions.fade(),
+) // with one of the custom transition shorthand builder functions provided by this package
 ..
 ```
 
@@ -175,14 +180,18 @@ DeepLinkMaterialApp(
 ```dart
 ..value<Song, SongDL>((song, route) => SongPage(song: song)),
 
-.valueRoute<Song, SongDL>((song, route) => MaterialPageRoute(
-    builder: (_) => SongPage(song: song))), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
+.valueRoute<Song, SongDL>(
+    (song, route) => SongPage(song: song),
+    transition: (widget) => MaterialPageRoute(builder: (_) => widget),
+), // with a custom page route or a custom PageRouteBuilder that implement custom route transitions
 
 ..valueRoute<Artist, ArtistDL>(
-    (artist, route) => ArtistPage(artist: artist).scaleTransition(
+    (artist, route) => ArtistPage(artist: artist),
+    transition: DeepLinkTransition.scale(
         alignment: Alignment.center,
         duration: Duration(milliseconds: 800),
-    )) // with one of the custom transition extensions provided by this package
+    ),
+) // with one of the custom transition shorthand builder functions provided by this package
 ```
 
 **Sub navigation**
@@ -247,6 +256,10 @@ All methods internally orchestrate a native flutter navigator.
 **Push a deep link**
 ```dart
 await DeepLinkNavigator.of(context).push(ArtistDL(...));
+
+await DeepLinkNavigator.of(context).push(
+    ArtistDL(...),
+    transition: ....); //with transition 
 ```
 
 **Pop a value**
@@ -264,11 +277,19 @@ DeepLinkNavigator.of(context).navigateTo([
     LibraryDL(),
     ArtistDL(...),
 ]);
+
+DeepLinkNavigator.of(context).navigateTo([
+    LibraryDL(),
+    ArtistDL(...),
+],
+transition: ....); //with transition
 ```
 
 **Return to default route (if any)**
 ```dart
 DeepLinkNavigator.of(context).replaceWithDefault();
+
+DeepLinkNavigator.of(context).replaceWithDefault(transition: ...); //with transition
 ```
 
 **TODO: Throw exception to be caught by mapper**
@@ -305,8 +326,6 @@ DeepLinkNavigator.of(context).replaceWithDefault();
 * Can't store separate persisted navigation states for a multi-base route application (think Instagram)
 
 ## What's left to do
-
-[ ] Custom/predefined page transitions
 
 [ ] Access deep link navigator from anywhere using static method and factory pattern
 
