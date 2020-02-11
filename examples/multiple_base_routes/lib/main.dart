@@ -52,7 +52,7 @@ class MusicApp extends StatelessWidget {
             (route) => LibraryPage(),
             transition: (widget) => DeepLinkTransition(
               type: DeepLinkTransitionType.fade,
-              child: LibraryPage(),
+              child: widget,
             ),
             subNavigation: Dispatcher()
               ..value<Artist, ArtistDL>(
